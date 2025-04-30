@@ -1,0 +1,21 @@
+
+Datei:
+  - label: "Öffnen"
+    command: open_file
+  - label: "Speichern"
+    command: save_file
+  - label: "Öffnen Verzeichnis"
+    command: open_directory
+  - label: "Speichern unter"
+    command: save_file_as
+  - separator
+  - label: "Exit"
+    command: exit_app
+Bearbeiten:
+  - label: "Kopieren"
+    command: copy_text
+  - label: "Einfügen"
+    command: paste_text
+Hilfe:
+  - label: "Über"
+    command: about

@@ -1,0 +1,64 @@
+
+rows:
+  - padding: 1
+    columns:
+      - type: Label
+        options:
+          text: "Benutzername:"
+      - type: Entry
+        name: username
+  - padding: 1
+    columns:
+      - type: Label
+        options:
+          text: "Vorname:"
+      - type: Entry
+        name: firstname
+  - padding: 1
+    columns:
+      - type: Label
+        options:
+          text: "Passwort:"
+      - type: Entry
+        name: password
+        options:
+          show: "*"
+  - padding: 1
+    columns:
+      - type: Label
+        options:
+          text: "E-Mail:"
+      - type: Entry
+        name: email
+  - padding: 20
+    columns:
+      - type: Button
+        options:
+          text: "Registrieren"
+          command: register_user
+      - type: Button
+        options:
+          text: "Login"
+          command: login_user
+      - type: Button
+        options:
+          text: "Abbrechen"
+          command: exit_app
+  - padding: 10
+    columns:
+      - type: Button
+        options:
+          text: "Show Values"
+          command: show_values
+  - padding: 15
+    columns:
+      - type: Card
+        options:
+          title: "Willkommen bei SimpleGUI"
+          content: "Bitte registrieren oder einloggen, um fortzufahren."
+  - padding: 5
+    columns:
+      - type: InfoBox
+        options:
+          message: "Hinweis: Ihre Daten werden sicher verarbeitet."
+          info_type: "info"

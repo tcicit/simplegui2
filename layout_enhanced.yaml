@@ -1,0 +1,213 @@
+# /home/tci/Dokumente/Entwicklung/Python/simpleGUI2/layout_enhanced.yaml
+rows:
+  - columns:
+      - type: Notebook # Use ttk.Notebook
+        name: main_notebook
+        options:
+          tabs:
+            # --- Tab 1: Eingabe & Buttons ---
+            - title: "Eingabe & Buttons"
+              layout:
+                rows:
+                  - columns:
+                      - type: Label
+                        options: { text: "Benutzername:" }
+                      - type: Entry # Use ttk.Entry
+                        name: username_entry
+                        options: { width: 30 }
+                  - columns:
+                      - type: Label
+                        options: { text: "Passwort:" }
+                      - type: Entry # Use ttk.Entry
+                        name: password_entry
+                        options: { width: 30, show: "*" }
+                  - columns:
+                      - type: Checkbutton # Use ttk.Checkbutton
+                        name: terms_check
+                        options: { text: "AGB akzeptieren" }
+                  - columns:
+                      - type: Button # Use ttk.Button
+                        name: register_button
+                        options: { text: "Registrieren" }
+                        command: "register_user"
+                      - type: Button # Use ttk.Button
+                        name: login_button
+                        options: { text: "Login" }
+                        command: "login_user"
+                  - columns:
+                      - type: Separator # Use ttk.Separator
+                        options: { orient: "horizontal" }
+                        pack_options: { fill: "x", pady: 10 }
+                  - columns:
+                      - type: Label
+                        name: info_label
+                        options: { text: "Dies ist ein Label, das geändert werden kann." }
+                  - columns:
+                      - type: Button # Use ttk.Button
+                        name: change_label_button
+                        options: { text: "Label ändern" }
+                        command: "change_label"
+                      - type: Button # Use ttk.Button
+                        name: show_values_button
+                        options: { text: "Werte anzeigen" }
+                        command: "show_all_values"
+
+            # --- Tab 2: Auswahl & Skala ---
+            - title: "Auswahl & Skala"
+              layout:
+                rows:
+                  - columns:
+                      - type: Label
+                        options: { text: "Lieblingsfarbe:" }
+                      - type: Combobox # Use ttk.Combobox
+                        name: color_combo
+                        options:
+                          values: ["Rot", "Grün", "Blau", "Gelb"]
+                          state: "readonly" # Optional: Nur Auswahl erlauben
+                  - columns:
+                      - type: Label
+                        options: { text: "Bewertung (1-100):" }
+                      - type: Scale # Use ttk.Scale
+                        name: rating_scale
+                        options: { from_: 1, to: 100, orient: "horizontal", length: 200 }
+                  - columns:
+                      - type: Label
+                        options: { text: "Anzahl:" }
+                      - type: Spinbox # Use ttk.Spinbox
+                        name: count_spin
+                        options: { from_: 0, to: 10, width: 5 }
+                  - columns:
+                      - type: Card # Custom Card Widget
+                        options:
+                          title: "Info Karte"
+                          content: "Dies ist eine benutzerdefinierte Karte."
+                        pack_options: { fill: "x", pady: 10 }
+                  - columns:
+                      - type: InfoBox # Custom InfoBox Widget
+                        options:
+                          message: "Dies ist eine Info-Nachricht."
+                          info_type: "info" # info, warning, error
+                        pack_options: { fill: "x", pady: 5 }
+                      - type: InfoBox # Custom InfoBox Widget
+                        options:
+                          message: "Dies ist eine Warnung."
+                          info_type: "warning"
+                        pack_options: { fill: "x", pady: 5 }
+                      - type: InfoBox # Custom InfoBox Widget
+                        options:
+                          message: "Dies ist ein Fehler."
+                          info_type: "error"
+                        pack_options: { fill: "x", pady: 5 }
+
+            # --- Tab 3: Weitere Widgets ---
+            - title: "Weitere Widgets"
+              layout:
+                rows:
+                  - columns: # Radio Buttons
+                      - type: Label
+                        options: { text: "Wählen Sie eine Option:" }
+                      - group: "radio_group" # WICHTIG: Gruppierung für Radio Buttons
+                        columns:
+                          - type: Radiobutton # Standard tk Radiobutton
+                            name: option1       # Optionaler Name für den einzelnen Button
+                            options:
+                              text: "Option 1"  # Angezeigter Text
+                              value: 1          # Wert, wenn dieser Button ausgewählt ist
+                          - type: Radiobutton # Standard tk Radiobutton
+                            name: option2
+                            options:
+                              text: "Option 2"
+                              value: 2
+                          - type: Radiobutton # Standard tk Radiobutton
+                            name: option3
+                            options:
+                              text: "Option 3"
+                              value: 3
+                  - columns: # Color Picker
+                      - type: Label
+                        options: { text: "Hintergrundfarbe:" }
+                      - type: ColorPicker
+                        name: background_color_picker
+                        options:
+                          initial_color: "#E0E0FF"
+                          button_text: "Farbe wählen..."
+                          show_hex: True
+                        command: "background_color_changed" # Optional: Callback
+                  - columns:
+                      - type: Button
+                        name: set_red_button
+                        options: { text: "Setze Farbe auf Rot" }
+                        command: "set_color_red"
+                  - columns: # Picture Widget
+                      - type: Label
+                        options: { text: "Bild:" }
+                      - type: Picture
+                        name: logo_image
+                        options:
+                          filepath: "assets/logo.png" # Pfad zum Bild
+                          width: 100 # Optionale Breite
+                          # height: 50 # Optionale Höhe (wenn nur eine Dimension -> Seitenverhältnis beibehalten)
+                        pack_options: { pady: 10 }
+
+            # --- Tab 4: Treeview Tabelle ---
+            - title: "Tabelle (Treeview)"
+              layout:
+                rows:
+                  - columns:
+                      - type: Treeview
+                        name: data_table
+                        options:
+                          columns: ["id", "name", "value"] # Spalten-IDs
+                          headings: ["#0", "ID", "Name", "Zufallswert"] # Angezeigte Überschriften (inkl. #0 für Baum)
+                          widths: { "#0": 0, "id": 50, "name": 150, "value": 100 } # Breite der Spalten
+                          anchors: { "id": "center", "name": "w", "value": "e" } # Ausrichtung
+                          show: "headings" # Zeige nur Überschriften, keinen Baum ('tree headings' oder 'tree')
+                        pack_options: { expand: True, fill: "both" } # Wichtig für Treeview
+                  - columns:
+                      - type: Button
+                        name: populate_button
+                        options: { text: "Tabelle füllen" }
+                        command: "populate_treeview"
+                      - type: Button
+                        name: clear_button
+                        options: { text: "Tabelle leeren" }
+                        command: "clear_treeview_cmd"
+                      - type: Button
+                        name: show_selection_button
+                        options: { text: "Auswahl zeigen" }
+                        command: "show_tree_selection"
+
+
+            # --- NEU: Tab 5: Canvas Demo ---
+            - title: "Canvas Demo"
+              layout:
+                rows:
+                  - columns:
+                      - type: Label
+                        options: { text: "Zeichenbereich:" }
+                  - columns:
+                      - type: Canvas
+                        name: drawing_canvas # Wichtig: Name für Python-Zugriff
+                        options:
+                          width: 400      # Breite des Canvas
+                          height: 300     # Höhe des Canvas
+                          bg: "#EEEEEE"   # Hintergrundfarbe (überschreibt Theme)
+                          # relief: "sunken" # Optional: Rahmen
+                          # bd: 1           # Optional: Rahmenbreite
+                        pack_options: { expand: True, fill: "both" } # Wichtig: Füllt verfügbaren Platz
+                  - columns:
+                      - type: Button
+                        name: draw_button
+                        options: { text: "Zeichne etwas" }
+                        command: "draw_on_canvas" # Python-Funktion zum Zeichnen
+                      - type: Button
+                        name: clear_canvas_button
+                        options: { text: "Leeren" }
+                        command: "clear_canvas"   # Python-Funktion zum Leeren
+                      # --- NEUER BUTTON ---
+                      - type: Button
+                        name: save_canvas_button
+                        options: { text: "Canvas speichern" }
+                        command: "save_canvas_image" # Neue Python-Funktion
+
+
