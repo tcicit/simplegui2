@@ -5,6 +5,7 @@ from simplegui.theme_manager import ThemeManager
 # Import custom widgets including the new ColorPicker widget
 from simplegui.custom_widgets import Card, InfoBox, Picture, ColorPicker # Added ColorPicker
 import logging
+import sys # Für sys.platform
 
 logging.basicConfig(level=logging.INFO)
 
@@ -28,19 +29,25 @@ class SimpleGUI:
         self.widget_vars = {} # Stores associated tk.Variable objects, keyed by name/group_name
 
     def build(self, layout):
+        self._current_layout = layout  # <--- Diese Zeile ergänzen
         """
         Builds the GUI layout based on the provided dictionary structure.
 
         Args:
             layout (dict): A dictionary describing the GUI layout (usually loaded from YAML).
-                           Expected structure: {"rows": [...]}
+                           Expected structure: {"rows": [...]} or {"grid": [...]}
         """
-        container = tk.Frame(self.root) # Main container frame
+        container = tk.Frame(self.root)  # Main container frame
         container.pack(fill="both", expand=True, padx=10, pady=10)
-        self.theme_manager.apply_theme_to_widget(container, "Frame") # Theme the main container
+        self.theme_manager.apply_theme_to_widget(container, "Frame")  # Theme the main container
 
-        # Start the recursive build process
-        self._build_recursive(container, layout.get("rows", []))
+        # Check for grid or rows layout
+        if "grid" in layout:
+            print("Grid layout erkannt. Baue Grid...")
+            self._build_grid(container, layout["grid"])
+        elif "rows" in layout:
+            print("Rows layout erkannt. Baue Rows...")
+            self._build_recursive(container, layout["rows"])
 
 
     def _build_recursive(self, parent_container, rows_layout):
@@ -161,9 +168,11 @@ class SimpleGUI:
                 command_func = None
                 command_name = col.get("command") # Get command name string from YAML
                 # Check if command is a string (needs mapping) or already a callable function
+                # Check if command is a string (needs mapping) or already a callable function
                 if isinstance(command_name, str) and widget_type in ["Button", "Checkbutton", "Radiobutton", "ttk.Button", "ttk.Checkbutton", "ttk.Radiobutton"]:
                     # Assume mapping happened before build()
-                    logging.warning(f"Command '{command_name}' for {widget_type} '{widget_name}' seems to be a string. Ensure it was mapped to a function before calling build().")
+                    # Logging-Level angepasst, da map_layout_commands dies nun tun sollte
+                    logging.debug(f"Command '{command_name}' for {widget_type} '{widget_name}' seems to be a string. Assuming it was mapped.")
                     command_func = command_name # Pass the string/mapped function
                 elif callable(command_name): # If it was already mapped
                      command_func = command_name
@@ -363,6 +372,81 @@ class SimpleGUI:
                     if widget_name in self.widgets:
                          logging.warning(f"Duplicate widget name '{widget_name}' detected. Overwriting.")
                     self.widgets[widget_name] = widget
+
+
+    def _build_grid(self, parent_container, grid_layout):
+        """
+        Builds widgets in a grid layout.
+
+        Args:
+            parent_container: The Tkinter container widget (e.g., Frame) to build into.
+            grid_layout (list): A list of dictionaries, where each dictionary represents a widget with row/column info.
+        """
+        # --- NEU: Spalten- und Zeilengewichte aus dem Layout setzen ---
+        layout = getattr(self, "_current_layout", None)
+        if layout is None:
+            # Versuche, das Layout aus dem Aufruf zu bekommen (siehe build())
+            import inspect
+            frame = inspect.currentframe()
+            outer_frames = inspect.getouterframes(frame)
+            for f in outer_frames:
+                if "layout" in f.frame.f_locals:
+                    layout = f.frame.f_locals["layout"]
+                    break
+
+        # Spaltengewichte setzen
+        if layout and "column_weights" in layout:
+            for col, weight in layout["column_weights"].items():
+                parent_container.grid_columnconfigure(int(col), weight=weight)
+        # Zeilengewichte setzen
+        if layout and "row_weights" in layout:
+            for row, weight in layout["row_weights"].items():
+                parent_container.grid_rowconfigure(int(row), weight=weight)
+
+        # 1. Mapping von Namen zu Frame-Widgets (nur für Frames im Grid)
+        frame_widgets = {}
+        for widget_data in grid_layout:
+            if widget_data.get("type") == "Frame" and "name" in widget_data:
+                options = widget_data.get("options", {}).copy()
+                grid_options = widget_data.get("grid_options", {"padx": 5, "pady": 5})
+                widget = tk.Frame(parent_container, **options)
+                widget.grid(row=widget_data.get("row", 0), column=widget_data.get("column", 0), **grid_options)
+                self.theme_manager.apply_theme_to_widget(widget, "Frame")
+                frame_widgets[widget_data["name"]] = widget
+                if widget_data["name"] not in self.widgets:
+                    self.widgets[widget_data["name"]] = widget
+
+        # 2. Alle anderen Widgets platzieren (Buttons etc.)
+        for widget_data in grid_layout:
+            if widget_data.get("type") == "Frame":
+                continue  # Schon oben erstellt
+
+            parent_name = widget_data.get("parent")
+            if parent_name and parent_name in frame_widgets:
+                container = frame_widgets[parent_name]
+            else:
+                container = parent_container
+
+            row = widget_data.get("row", 0)
+            column = widget_data.get("column", 0)
+            widget_type = widget_data.get("type")
+            widget_name = widget_data.get("name")
+            options = widget_data.get("options", {}).copy()
+            grid_options = widget_data.get("grid_options", {"padx": 5, "pady": 5})
+
+            widget_class = self._resolve_widget_class(widget_type)
+            if not widget_class:
+                logging.error(f"Unknown widget type '{widget_type}' in grid layout.")
+                continue
+
+            try:
+                widget = widget_class(container, **options)
+                widget.grid(row=row, column=column, **grid_options)
+                self.theme_manager.apply_theme_to_widget(widget, widget_type)
+                if widget_name:
+                    self.widgets[widget_name] = widget
+            except Exception as e:
+                logging.error(f"Error creating widget '{widget_name}' in grid layout: {e}")
 
 
     def _resolve_widget_class(self, widget_type):

@@ -10,7 +10,7 @@ from unittest.mock import patch, MagicMock, ANY
 from simplegui.core import SimpleGUI
 from simplegui.custom_widgets import Picture, Card, InfoBox
 # We need yaml_loader to load the structure, or we simulate it
-from yaml_loader import load_yaml_layout
+from simplegui.yaml_loader import load_yaml_layout
 
 # --- Mock Pillow for tests ---
 # Mock the PIL module IF it's not installed or to avoid file dependency

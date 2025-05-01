@@ -12,10 +12,11 @@ Datei:
   - label: "Exit"
     command: exit_app
 Bearbeiten:
-  - label: "Kopieren"
-    command: copy_text
-  - label: "Einfügen"
-    command: paste_text
+    items:
+      - label: "Rückgängig"
+        command: undo
+      - label: "Wiederholen"
+        command: redo
 Hilfe:
   - label: "Über"
     command: about

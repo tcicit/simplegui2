@@ -63,35 +63,68 @@ class InfoBox(tk.Frame):
 
 class Picture(tk.Label):
     # ... (keep existing Picture code) ...
-    def __init__(self, parent, filepath=None, width=None, height=None, **kwargs):
+    def __init__(self, parent, filepath=None, width=None, height=None, bg=None, **kwargs):
         super().__init__(parent, **kwargs)
-        self._photo_image = None # Crucial: Keep reference
+        self._pil_image = None # Store the original PIL image if needed
+        self._photo_image = None # Crucial: Keep reference to Tkinter image
+        self._default_bg = bg or parent.cget("bg") # Store background color
+        self.config(bg=self._default_bg) # Apply background
+        self._width_hint = width # Store desired width if provided
+        self._height_hint = height # Store desired height if provided
 
         if not PIL_AVAILABLE:
-            self.config(text="Error: Pillow not installed", fg="red")
+            self.config(text="Error: Pillow not installed", fg="red", bg=self._default_bg)
             return
+
         if not filepath:
-            self.config(text="Error: Image filepath missing", fg="red")
+            # Display placeholder or nothing if no initial filepath
+            self.config(text="", bg=self._default_bg) # Empty text initially
+            return
+
+        # Load initial image if filepath is provided
+        self.load_image(filepath)
+
+    def load_image(self, filepath):
+        """Loads and displays an image from the given filepath."""
+        if not PIL_AVAILABLE:
+            self.config(text="Error: Pillow not installed", fg="red", bg=self._default_bg)
             return
 
         try:
             img = Image.open(filepath)
+            self._pil_image = img.copy() # Store a copy of the PIL image
             original_width, original_height = img.size
 
-            # Calculate new size while maintaining aspect ratio if only one dimension is given
-            if width and not height:
-                ratio = width / original_width
-                height = int(original_height * ratio)
-            elif height and not width:
-                ratio = height / original_height
-                width = int(original_width * ratio)
+            # Determine target size based on hints or widget size
+            target_w = self._width_hint
+            target_h = self._height_hint
 
-            # Resize if width or height is specified
-            if width and height:
-                img = img.resize((width, height), Image.Resampling.LANCZOS)
+            # If hints not provided, try to use current widget size (might be 1x1 initially)
+            # We might need to resize *after* the widget is displayed and has size.
+            # For preview, let's use a sensible default max size if hints are missing.
+            if not target_w and not target_h:
+                 # Use widget's actual size if available and > 1, else default max
+                 widget_w = self.winfo_width()
+                 widget_h = self.winfo_height()
+                 if widget_w > 1 and widget_h > 1:
+                     target_w = widget_w
+                     target_h = widget_h
+                 else:
+                     target_w = 400 # Default max preview width
+                     target_h = 400 # Default max preview height
 
+            # Resize using thumbnail (maintains aspect ratio)
+            img.thumbnail((target_w or original_width, target_h or original_height), Image.Resampling.LANCZOS)
+
+            # Clear previous image reference if any
+            if self._photo_image:
+                self.config(image='')
+
+            # Create new Tkinter-compatible image and store reference
             self._photo_image = ImageTk.PhotoImage(img)
-            self.config(image=self._photo_image)
+            self.config(image=self._photo_image, text="", width=self._photo_image.width(), height=self._photo_image.height()) # Set image, clear text, adjust size
+            # Ensure background is consistent
+            self.config(bg=self._default_bg)
 
         except FileNotFoundError:
             logging.error(f"Image file not found: {filepath}")
@@ -99,6 +132,13 @@ class Picture(tk.Label):
         except Exception as e:
             logging.error(f"Error loading image {filepath}: {e}")
             self.config(text=f"Error loading image:\n{e}", fg="red", justify="left")
+
+    def clear(self):
+        """Removes the currently displayed image."""
+        self.config(image='', text="") # Remove image and any error text
+        self._photo_image = None
+        self._pil_image = None
+        self.config(bg=self._default_bg) # Ensure background is reset
 
 
 # --- NEW ColorPicker Widget ---
@@ -189,4 +229,3 @@ class ColorPicker(tk.Frame):
                 logging.warning(f"Invalid color string for ColorPicker: {color_hex} - {e}")
         else:
              logging.warning(f"Attempted to set invalid color format in ColorPicker: {color_hex}")
-

@@ -106,6 +106,58 @@ rows:
 
 ---
 
+Hier ist eine Liste aller in deiner YAML-Datei verwendeten `grid_options` mit Erklärung:
+
+- **rowspan** 
+  Gibt an, über wie viele Zeilen sich das Widget erstrecken soll. 
+  *Beispiel:* `rowspan: 7` → Das Widget nimmt 7 Zeilen ein.
+
+- **sticky** 
+  Bestimmt, an welchen Seiten des Zellenbereichs das Widget „klebt“. 
+  *Mögliche Werte:* 
+  - `n` (oben), 
+  - `s` (unten), 
+  - `e` (rechts), 
+  - `w` (links), 
+  - Kombinationen wie `nsew` (füllt die Zelle komplett aus), `ew` (füllt horizontal), `new` (oben, rechts, links).
+
+- **pady** 
+  Fügt vertikalen Außenabstand (Padding) oberhalb und unterhalb des Widgets hinzu. 
+  *Beispiel:* `pady: 5` → 5 Pixel Abstand oben und unten.
+
+- **padx** 
+  Fügt horizontalen Außenabstand (Padding) links und rechts des Widgets hinzu.  
+  *Beispiel:* `padx: 10` → 10 Pixel Abstand links und rechts.
+
+Diese Optionen steuern das Layout der Widgets im Tkinter-Grid-Manager.
+
+# Grid Options
+
+## Gewichte 
+  Erklärung der Grid Gewichte :
+    """
+    The grid weights are used to determine how space is allocated to different rows and columns
+    in a grid layout. Each weight represents the relative proportion of space that a row or column
+    should occupy compared to others. A higher weight means that the corresponding row or column
+    will take up more space when the grid is resized.
+
+    For example:
+    - A column with a weight of 2 will take up twice as much space as a column with a weight of 1.
+    - If all weights are equal, the space will be distributed evenly.
+
+    Grid weights are typically used in GUI frameworks to create flexible and responsive layouts.
+    """
+
+## row
+  Erklärung der Grid Rows :
+    """
+
+  
+## column
+  Erklärung der Grid Columns :
+    """
+
+
 ## Komplettes Beispiel
 
 ### YAML-Layout (minimal_layout.yaml)

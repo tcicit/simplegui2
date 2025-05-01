@@ -4,7 +4,7 @@ from simplegui.core import SimpleGUI
 from simplegui.menu_manager import MenuManager
 from simplegui.messages import Messages
 from simplegui.filedialogs import FileDialogs
-from yaml_loader import load_yaml_layout
+from simplegui.yaml_loader import load_yaml_layout
 import random
 # --- NEUE IMPORTE ---
 import io
@@ -275,7 +275,6 @@ command_mapping = {
     "populate_treeview": populate_treeview,
     "clear_treeview_cmd": clear_treeview_cmd,
     "show_tree_selection": show_tree_selection,
-    # --- NEW Commands ---
     "background_color_changed": background_color_changed, # Map the optional callback
     "set_color_red": set_color_red, # Map the test button command
     # --- Canvas Commands ---
@@ -307,7 +306,6 @@ def map_menu_commands(menu_data, mapping):
 
 menu_structure = map_menu_commands(menu_structure_raw, command_mapping)
 # -----------------------------------------
-
 
 # --- App Erstellung und Start ---
 root = tk.Tk()

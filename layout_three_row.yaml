@@ -1,0 +1,130 @@
+grid:
+  # Erste Spalte (z.B. für Listbox)
+  - row: 0
+    column: 0
+    type: Listbox
+    name: image_listbox
+    options:
+      height: 25
+    grid_options:
+      rowspan: 3
+      sticky: ns
+
+  # Zweite Spalte, erste Zeile (z.B. für Label)
+  - row: 0
+    column: 1
+    type: Label
+    name: image_label
+    options:
+      text: "Kein Bild ausgewählt."
+    grid_options:
+      sticky: ew
+
+  # Zweite Spalte, zweite Zeile (z.B. für Bildvorschau)
+  - row: 1
+    column: 1
+    type: Picture
+    name: image_preview
+    options:
+      width: 400
+      height: 400
+    grid_options:
+      sticky: nsew
+
+  # Dritte Spalte, erste Zeile (z.B. für Buttons)
+  - row: 0
+    column: 2
+    type: Button
+    name: btn_select_dir
+    options:
+      text: "Verzeichnis wählen"
+      command: select_directory
+    grid_options:
+      sticky: ew
+      pady: 5
+
+  - row: 1
+    column: 2
+    type: Label
+    options:
+      text: "Bearbeiten:"
+    grid_options:
+      sticky: ew
+      pady: 5
+
+  - row: 2
+    column: 2
+    type: Button
+    name: rotate_left_button
+    options:
+      text: "Links drehen"
+      command: rotate_left
+    grid_options:
+      sticky: ew
+      pady: 5
+
+  - row: 3
+    column: 2
+    type: Button
+    name: rotate_right_button
+    options:
+      text: "Rechts drehen"
+      command: rotate_right
+    grid_options:
+      sticky: ew
+      pady: 5
+
+  - row: 4
+    column: 2
+    type: Button
+    name: crop_button
+    options:
+      text: "Zuschneiden (Mitte)"
+      command: crop_center
+    grid_options:
+      sticky: ew
+      pady: 5
+
+  - row: 5
+    column: 2
+    type: Button
+    name: resize_button
+    options:
+      text: "Größe halbieren"
+      command: resize_half
+    grid_options:
+      sticky: ew
+      pady: 5
+
+  - row: 6
+    column: 2
+    type: Button
+    name: save_as_button
+    options:
+      text: "Als neues Bild speichern"
+      command: save_image_as
+    grid_options:
+      sticky: ew
+      pady: 5
+menu:
+  - label: "Datei"
+    items:
+      - label: "Öffnen"
+        command: open_file
+      - label: "Speichern"
+        command: save_file
+      - label: "Beenden"
+        command: exit_app
+  - label: "Bearbeiten"
+    items:
+      - label: "Rückgängig"
+        command: undo
+      - label: "Wiederholen"
+        command: redo
+  - label: "Hilfe"
+    items:
+      - label: "Über"
+        command: show_about
+    command: about
+
+

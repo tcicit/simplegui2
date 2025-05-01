@@ -1,0 +1,173 @@
+# Gewichte der Spalten und Zeilen:
+# column_weights: Bestimmt, wie viel Platz jede Spalte im Verhältnis zu den anderen Spalten einnimmt.
+# row_weights: Bestimmt, wie viel Platz jede Zeile im Verhältnis zu den anderen Zeilen einnimmt.
+# grid: Definiert die Anordnung der Widgets im Grid-Layout.
+# In diesem Layout wird ein ScrollableFrame für die Thumbnails verwendet, um eine bessere Benutzererfahrung zu bieten.
+
+column_weights: # Gewichte der Spalten
+  0: 1 # Gewicht der ersten Spalte (Thumbnail-Container)
+  1: 3
+  2: 0
+
+row_weights: # Gewichte der Zeilen
+  0: 1
+  1: 1
+  2: 1
+
+grid:
+  # Erste Spalte (Container für Thumbnails)
+  - row: 0
+    column: 0
+    type: Frame # Geändert von Listbox zu Frame
+    name: thumbnail_container # Neuer Name
+    options:
+      borderwidth: 1 # Optional: Rahmen zur Sichtbarkeit
+      relief: "sunken" # Optional: Rahmenstil
+    grid_options:
+      rowspan: 9 # Erstreckt sich über alle Zeilen der rechten Spalte (Anpassen bei Bedarf)
+      sticky: nsew # Lässt den ScrollableFrame den Platz ausfüllen
+
+  # ----------------- Zweite Spalte, erste Zeile (z.B. für Label) ----------------
+  - row: 0
+    column: 1
+    type: Frame # Geändert von Listbox zu Frame
+    name: image_container # Neuer Name
+    options:
+      borderwidth: 1 # Optional: Rahmen zur Sichtbarkeit
+      relief: "sunken" # Optional: Rahmenstil
+    grid_options:
+      rowspan: 3 # Erstreckt sich über alle Zeilen der rechten Spalte (Anpassen bei Bedarf)
+      sticky: nsew # Lässt den ScrollableFrame den Platz ausfüllen
+
+  - row: 1
+    column: 1
+    type: Label
+    parent: image_container
+    name: image_label
+    options:
+      text: "Kein Bild ausgewählt."
+    grid_options:
+      sticky: nwes
+      #rowspan: 2 # Erstreckt sich über zwei Zeilen
+
+  # Zweite Spalte, zweite Zeile (z.B. für Bildvorschau)
+  - row: 2
+    column: 2
+    type: Picture
+    parent: image_container
+    name: image_preview
+    options:
+      width: 600
+      height: 600
+    grid_options:
+      sticky: nsew
+
+  #---------------Dritte Spalte: Frame für alle Buttons und Labels -------------------
+  - row: 0
+    column: 2
+    type: Frame
+    name: button_panel
+    options:
+      borderwidth: 1 # Optional: Rahmen zur Sichtbarkeit
+      relief: "sunken" # Optional: Rahmenstil 
+    grid_options:
+      sticky: n
+      padx: 5
+
+  # Ab hier: Alle Buttons/Labels in den Frame 'button_panel' verschieben
+  - row: 0
+    column: 0
+    parent: button_panel
+    type: Button
+    name: btn_select_dir
+    options:
+      text: "Verzeichnis wählen"
+      command: open_directory
+    grid_options:
+      sticky: ew
+
+  - row: 1
+    column: 0
+    parent: button_panel
+    type: Label
+    options:
+      text: "Bearbeiten:"
+      bg: "rosybrown"
+    grid_options:
+      sticky: ew
+
+  - row: 2
+    column: 0
+    parent: button_panel
+    type: Button
+    name: rotate_left_button
+    options:
+      text: "Links drehen"
+      command: rotate_left
+    grid_options:
+      sticky: ew
+
+  - row: 3
+    column: 0
+    parent: button_panel
+    type: Button
+    name: rotate_right_button
+    options:
+      text: "Rechts drehen"
+      command: rotate_right
+    grid_options:
+      sticky: ew
+
+  - row: 4
+    column: 0
+    parent: button_panel
+    type: Button
+    name: crop_button
+    options:
+      text: "Zuschneiden (Mitte)"
+      command: crop_center
+    grid_options:
+      sticky: ew
+
+  - row: 5
+    column: 0
+    parent: button_panel
+    type: Button
+    name: resize_button
+    options:
+      text: "Größe halbieren"
+      command: resize_half
+    grid_options:
+      sticky: ew
+
+  - row: 6
+    column: 0
+    parent: button_panel
+    type: Button
+    name: save_as_button
+    options:
+      text: "Als neues Bild speichern"
+      command: save_image_as
+    grid_options:
+      sticky: ew
+# ----------------- Menu Definition -----------------
+menu:
+  - label: "Datei"
+    items:
+      - label: "Öffnen"
+        command: open_file
+      - label: "Speichern"
+        command: save_file
+      - label: "Beenden"
+        command: exit_app
+  - label: "Bearbeiten"
+    items:
+      - label: "Rückgängig"
+        command: undo
+      - label: "Wiederholen"
+        command: redo
+  - label: "Hilfe"
+    items:
+      - label: "Über"
+        command: show_about
+    command: about

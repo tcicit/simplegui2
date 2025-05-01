@@ -168,11 +168,12 @@ class ThemeManager:
              if not isinstance(widget, (Card, InfoBox, ColorPicker)): # Added ColorPicker check
                 specific_options["bg"] = self.theme.get("frame_bg", "#f0f0f0")
         elif isinstance(widget, tk.Label):
-            # Exclude Picture widget here, handled separately
             if not isinstance(widget, Picture):
                 specific_options["font"] = font
                 specific_options["fg"] = self.theme.get("label_fg", "#000000")
-                specific_options["bg"] = self.theme.get("label_bg", "#f0f0f0")
+                # Nur setzen, wenn bg nicht schon gesetzt wurde (z.B. durch YAML)
+                if "bg" not in widget.keys() or widget.cget("bg") == "" or widget.cget("bg") == self.theme.get("label_bg", "#f0f0f0"):
+                    specific_options["bg"] = self.theme.get("label_bg", "#f0f0f0")
         elif isinstance(widget, tk.Entry):
             specific_options["font"] = font
             specific_options["bg"] = self.theme.get("entry_bg", "#ffffff")
