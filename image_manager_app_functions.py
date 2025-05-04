@@ -4,6 +4,14 @@ import tkinter as tk
 from tkinter import filedialog, messagebox # Import messagebox
 import os # Hinzugefügt für Verzeichnisoperationen
 from PIL import Image, ImageTk # Für Bildverarbeitung (Thumbnails)
+from simplegui.core_functions import open_directory # Importieren der open_directory Funktion
+
+
+def handle_directory_selection(app):
+    """Wrapper-Funktion, die ein Verzeichnis auswählt und die Thumbnails aktualisiert."""
+    directory = open_directory(app)  # Verzeichnis auswählen
+    if directory:  # Wenn ein Verzeichnis ausgewählt wurde
+        populate_thumbnail_grid(app, directory)  # Thumbnails aktualisieren
 
 
 def populate_thumbnail_grid(app, directory):
@@ -179,3 +187,5 @@ def save_image_as(app):
                 messagebox.showerror("Fehler beim Speichern", str(e))
     else:
         messagebox.showwarning("Kein Bild", "Kein Bild zum Speichern geladen.")
+
+

@@ -1,12 +1,11 @@
 # /home/tci/Dokumente/Entwicklung/Python/simpleGUI2/demo_app_yaml.py
 import tkinter as tk
-from simplegui.core import SimpleGUI
-from simplegui.menu_manager import MenuManager
+#from simplegui.core import SimpleGUI
+#from simplegui.menu_manager import MenuManager
 from simplegui.messages import Messages
 from simplegui.filedialogs import FileDialogs
 from simplegui.yaml_loader import load_yaml_layout
 import random
-# --- NEUE IMPORTE ---
 import io
 try:
     from PIL import Image
@@ -175,7 +174,6 @@ def clear_canvas(app):
     else:
         Messages.error("Canvas Fehler", "Widget 'drawing_canvas' nicht gefunden.")
 
-# --- NEUE FUNKTION: Canvas speichern ---
 def save_canvas_image(app):
     """Speichert den aktuellen Inhalt des Canvas als Bilddatei (PNG, JPG)."""
     print("Speichere Canvas...")

@@ -3,7 +3,7 @@ from simplegui.filedialogs import FileDialogs
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import os
-from PIL import Image, ImageTk
+# from PIL import Image, ImageTk
 
 
 def exit_app(app):
@@ -45,17 +45,20 @@ def save_file_as(app):
 
 
 def open_directory(app):
-    """Opens a directory dialog and prints the selected directory."""
-    print("Attempting to open directory...")
+    """Öffnet ein Verzeichnisdialog und gibt das ausgewählte Verzeichnis zurück."""
+    print("Verzeichnis auswählen...")
     try:
-        directory = filedialog.askdirectory(title="Select an image directory")
+        directory = filedialog.askdirectory(title="Verzeichnis auswählen")
         if directory:
-            print(f"Directory selected: {directory}")
+            print(f"Ausgewähltes Verzeichnis: {directory}")
+            return directory  # Verzeichnis zurückgeben
         else:
-            print("No directory selected.")
+            print("Kein Verzeichnis ausgewählt.")
+            return None
     except Exception as e:
-        print(f"Error while opening directory: {e}")
-        messagebox.showerror("Error", f"Could not open directory:\n{e}")
+        print(f"Fehler beim Öffnen des Verzeichnisses: {e}")
+        messagebox.showerror("Fehler", f"Konnte Verzeichnis nicht öffnen:\n{e}")
+        return None
 
 
 def show_about(app):
