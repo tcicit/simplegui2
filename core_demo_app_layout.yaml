@@ -210,4 +210,21 @@ rows:
                         options: { text: "Canvas speichern" }
                         command: "save_canvas_image" # Neue Python-Funktion
 
+# --------- Menu Bar ---------
+menu:
+  - label: "Datei"
+    items:
+      - label: "Öffnen"
+        command: open_file
+      - label: "Speichern"
+        command: save_file
+      - label: "Beenden"
+        command: exit_app
+
+  - label: "Hilfe"
+    items:
+      - label: "Über"
+        command: show_about
+    command: about
+
 

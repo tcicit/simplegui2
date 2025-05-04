@@ -3,33 +3,15 @@ import inspect
 from simplegui.yaml_loader import load_yaml_layout
 import logging # Importiere logging
 
-def auto_generate_command_mapping(commands_module):
-    """
-    Automatisch alle Funktionen aus einem Modul extrahieren und als Mapping zurückgeben.
-
-    Args:
-        commands_module (module): Das Modul, das die Befehlsfunktionen enthält.
-
-    Returns:
-        dict: Ein Mapping von Funktionsnamen (Strings) zu tatsächlichen Python-Funktionen.
-    """
-    return {
-        name: func
-        for name, func in inspect.getmembers(commands_module, inspect.isfunction)
-    }
-
-def setup_layout(app, layout_file, commands_module):
+def setup_layout(app, layout_file, command_mapping):
     """
     Lädt das Layout, mappt die Commands und baut das Layout.
 
     Args:
         app (SimpleGUI): Die Instanz der SimpleGUI-Klasse.
         layout_file (str): Der Pfad zur YAML-Layout-Datei.
-        commands_module (module): Das Modul, das die Befehlsfunktionen enthält.
+        command_mapping (dict): Mapping von Funktionsnamen zu Python-Funktionen.
     """
-    # Automatisch Command-Mapping generieren
-    command_mapping = auto_generate_command_mapping(commands_module)
-
     # Layout laden
     layout = load_yaml_layout(layout_file)
 
@@ -37,24 +19,15 @@ def setup_layout(app, layout_file, commands_module):
     menu_data = layout.pop("menu", None)
 
     # Commands im Layout mappen
-    # Die eigentliche Lambda-Verpackung für Layout-Widgets geschieht in core.py's build Methode
-    map_layout_commands(layout, command_mapping, app) # app wird jetzt benötigt
+    map_layout_commands(layout, command_mapping, app)
 
     # Baue das Grid-Layout zuerst
     app.build(layout)
 
     # Lade das Menü danach, falls vorhanden
-    if menu_data: # setup_menu macht das Lambda-Wrapping bereits korrekt
+    if menu_data:
         setup_menu(app, menu_data, command_mapping)
 
-def map_layout_commands(layout, command_mapping):
-    """
-    Mappt die Befehle (commands) in der Layout-Struktur auf die tatsächlichen Python-Funktionen.
-
-    Args:
-        layout (dict): Das Layout-Dictionary, das aus der YAML-Datei geladen wurde.
-        command_mapping (dict): Ein Dictionary, das Funktionsnamen (Strings) auf Python-Funktionen abbildet.
-    """
 def map_layout_commands(layout, command_mapping, app): # Füge 'app' als Parameter hinzu
     # Rekursive Funktion, um durch verschachtelte Layouts zu gehen
     def _recursive_map(data):
@@ -63,6 +36,7 @@ def map_layout_commands(layout, command_mapping, app): # Füge 'app' als Paramet
             if "command" in data and isinstance(data["command"], str):
                 command_name = data["command"]
                 mapped_func = command_mapping.get(command_name) # Hole die Funktion
+                
                 if mapped_func:
                     # Ersetze String durch ein Lambda, das die Funktion mit app aufruft
                     data["command"] = lambda app=app, cmd=mapped_func: cmd(app)

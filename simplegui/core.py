@@ -5,7 +5,7 @@ from simplegui.theme_manager import ThemeManager
 # Import custom widgets including the new ColorPicker widget
 from simplegui.custom_widgets import Card, InfoBox, Picture, ColorPicker # Added ColorPicker
 import logging
-import sys # Für sys.platform
+
 
 logging.basicConfig(level=logging.INFO)
 
