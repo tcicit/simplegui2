@@ -99,7 +99,7 @@
 
 ## Documentation
 
-- Full manual: [docs/HANDBUCH.md](docs/HANDBUCH.md) (German)
+- Full manual: [docs/SimpleGUI2 Framework – Handbuch-02.md](docs/SimpleGUI2 Framework – Handbuch-02.md) (German)
 - Example layouts: see `core_demo_app_layout.yaml`, `editor_demo_app_layout.yaml`, `markdown_demo/`
 - More examples and details in the source code and YAML files
 
