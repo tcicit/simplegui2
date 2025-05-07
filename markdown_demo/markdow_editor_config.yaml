@@ -1,0 +1,4 @@
+# Konfiguration für den Markdown Editor
+
+# Pfad zur CSS-Datei für die Vorschau
+css_path: /pfad/zu/deiner/preview_style.css

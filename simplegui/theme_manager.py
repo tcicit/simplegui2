@@ -30,7 +30,7 @@ class ThemeManager:
         "listbox_fg": "#000000",
         "scale_bg": "#f0f0f0",
         "scale_troughcolor": "#d3d3d3",
-        "canvas_bg": "#ffffff", # <-- NEU: Hintergrund für Canvas
+        "canvas_bg": "#ffffff",
         "card_bg": "#ffffff", # Custom widget theming
         "card_border": "#dddddd",
         "infobox_info_bg": "#d9edf7",
@@ -225,7 +225,6 @@ class ThemeManager:
              specific_options["fg"] = self.theme.get("label_fg", "#000000")
              specific_options["bg"] = self.theme.get("frame_bg", "#f0f0f0")
              specific_options["font"] = self.get_font("bold") # Make label bold
-        # --- NEU: Theming für Canvas ---
         elif isinstance(widget, tk.Canvas):
              specific_options["bg"] = self.theme.get("canvas_bg", "#ffffff")
              specific_options["highlightthickness"] = 0 # Oft gewünscht, um Standardrahmen zu entfernen

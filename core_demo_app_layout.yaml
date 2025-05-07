@@ -1,4 +1,9 @@
-# /home/tci/Dokumente/Entwicklung/Python/simpleGUI2/layout_enhanced.yaml
+# Core Demo App Layout
+# This is a YAML layout file for a Tkinter application using ttk widgets.
+# It defines the structure and components of the GUI, including tabs, buttons, labels, and other widgets.
+# The layout is organized into a main window with a menu bar and a notebook (tabbed interface).
+# The layout is designed to be user-friendly and visually appealing, with various input fields and controls for user interaction.
+# --------- Main Window ---------
 rows:
   - columns:
       - type: Notebook # Use ttk.Notebook
@@ -209,6 +214,50 @@ rows:
                         name: save_canvas_button
                         options: { text: "Canvas speichern" }
                         command: "save_canvas_image" # Neue Python-Funktion
+            # --- NEU: Tab 6: Textview Demo ---
+            - title: "Textview Demo"
+              layout:
+                rows:
+                  - columns:
+                      - type: Label
+                        options: { text: "Textbereich:" }
+                  - columns: 
+                      - type: Text
+                        name: text_view_area
+                        options:
+                          width: 50
+                          height: 20
+                          wrap: "word" # Zeilenumbruch
+                          bg: "#FFFFFF" # Hintergrundfarbe (überschreibt Theme)
+                          font: ["Arial", 12] # Schriftart und Größe
+                        pack_options: { expand: True, fill: "both" } # Wichtig: Füllt verfügbaren Platz
+                  - columns:
+                      - type: Button
+                        name: save_text_button
+                        options: { text: "Text speichern" }
+                        command: "save_text_to_file" # Python-Funktion zum Speichern
+                      - type: Button
+                        name: load_text_button
+                        options: { text: "Text laden" }
+                        command: "load_text_from_file" # Python-Funktion zum Laden
+                      - type: Button
+                        name: clear_text_button
+                        options: { text: "Text leeren" }
+                        command: "clear_text_area" # Python-Funktion zum Leeren
+  - columns:
+      - type: Button
+        name: exit_button
+        options:
+          text: "Beenden"
+          command: "exit_app" # Python-Funktion zum Beenden der App
+        pack_options:
+          side: "bottom"
+          fill: "x"
+          pady: 10
+
+
+
+
 
 # --------- Menu Bar ---------
 menu:

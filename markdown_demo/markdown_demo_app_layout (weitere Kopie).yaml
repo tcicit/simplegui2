@@ -1,0 +1,161 @@
+# Gewichte der Spalten und Zeilen für das Haupt-Grid:
+column_weights:
+  0: 1 # Editor-Spalte
+  1: 1 # Vorschau-Spalte
+
+row_weights:
+  0: 1 # Editor/Vorschau-Zeile (soll vertikal wachsen)
+  1: 0 # Button-Zeile (soll nicht vertikal wachsen)
+
+
+grid:
+   # --- Zeile 0, Spalte 0: Editor ---
+  - row: 0
+    column: 0
+    type: Text
+    name: editor_area
+    options:
+      wrap: "word"
+    grid_options:
+      sticky: nsew # Füllt die Zelle in alle Richtungen
+      padx: 5
+      pady: 5
+
+    # --- Zeile 0, Spalte 1: HTML Vorschau ---
+  - row: 0
+    column: 1
+    type: HtmlPreviewArea
+    name: HtmlPreviewArea   # Wichtig: Name muss mit get_widget übereinstimmen
+    options:
+      borderwidth: 1 # Optional: Rahmen zur Sichtbarkeit
+      relief: "sunken" # Optional: Rahmenstil
+    grid_options:
+      sticky: nsew # Füllt die Zelle in alle Richtungen
+      padx: 5
+      pady: 5
+ 
+  # ----------------- Zeile 1, Spalte 0 und 1: Button-Leiste --------------
+  - row: 1
+    column: 0
+    columnspan: 2 # Button-Leiste über beide Spalten
+    rowspan: 1 # Nur eine Zeile
+    type: Frame
+    name: button_bar
+    options:
+      borderwidth: 1 # Rahmen vielleicht nicht nötig
+      relief: "sunken"
+    grid_options: # Dieser Frame wird mit grid platziert
+      sticky: ew # Nur horizontal ausdehnen
+      padx: 5
+      pady: 5
+
+  # Buttons innerhalb des 'button_bar' Frames (verwenden pack für einfache horizontale Anordnung)
+  - row: 0
+    column: 0
+    type: Button
+    parent: button_bar
+    name: clear_button
+    options:
+      text: "Zurücksetzen"
+      command: clear_text
+    grid_options:
+      sticky: ew
+
+  # Speichern-Button in der Mitte
+  - row: 0
+    column: 1
+    type: Button
+    parent: button_bar
+    name: save_button
+    options:
+      text: "Markdown Speichern"
+      command: save_file
+    grid_options:
+      sticky: ew
+
+  - row: 0
+    column: 2
+    type: Button
+    parent: button_bar
+    name: save_button
+    options:
+      text: "HTML Speichern"
+      command: save_html
+    grid_options:
+      sticky: ew
+
+  # Exit-Button rechtsbündig
+  - row: 0
+    column: 3
+    type: Button
+    parent: button_bar
+    name: exit_button
+    options:
+      text: "Beenden"
+      command: exit_app
+    grid_options:
+      sticky: ew
+
+# --- Menü bleibt unverändert ---
+menu:
+  - label: Datei
+    items:
+      - label: Neu
+        command: new_file
+      - label: Öffnen
+        command: open_file
+      - label: Speichern
+        command: save_file
+      - label: Speichern unter ...
+        command: save_file_as
+      - label: HTML Speichern
+        command: save_html
+      - label: CSS für Vorschau laden... # Neuer Menüpunkt
+        command: load_css_file          # Verweist auf die neue Funktion
+      - label: Beenden
+        command: exit_app
+  - label: Bearbeiten
+    items:
+      - label: Rückgängig
+        command: undo
+      - label: Wiederholen
+        command: redo
+      - label: Alle auswählen
+        command: select_all
+      - label: Ausschneiden
+        command: cut
+      - label: Kopieren
+        command: copy
+      - label: Einfügen
+        command: paste
+      - label: Löschen
+        command: delete
+
+  - label: Markdown
+    items:
+      - label: Einfügen Bild (Strg+I) # Hinweis auf Shortcut hinzugefügt
+        command: insert_image
+      - label: Einfügen von Link
+        command: insert_link
+      - label: Einfügen von Tabelle
+        command: insert_table
+      - label: Einfügen von Code
+        command: insert_code
+      - label: Einfügen von Zitat
+        command: insert_quote
+
+  - label: Suchen
+    items:
+      - label: Suche
+        command: search_text
+      - label: Ersetzen
+        command: replace_text
+  
+  - label: Hilfe
+    items:
+      - label: Über
+        command: show_about
+      - label: Hilfe
+        command: show_help
+      - label: Markdown
+        command: show_markdown

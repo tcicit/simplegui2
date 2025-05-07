@@ -17,15 +17,27 @@ except ImportError:
 
 
 def register_user(app):
-    username = app.get_widget_value("username_entry")
-    password = app.get_widget_value("password_entry")
-    terms = app.get_widget_value("terms_check")
+    try:
+        username = app.get_widget_value("username_entry")
+        password = app.get_widget_value("password_entry")
+        terms = app.get_widget_value("terms_check")
+    except Exception as e:
+        Messages.error("Fehler", f"Fehler beim Auslesen der Eingabefelder:\n{e}")
+        return
+
+    if username is None or password is None or terms is None:
+        Messages.error("Fehler", "Mindestens ein Eingabefeld konnte nicht gefunden werden.")
+        return
+
     if username and password:
         if terms == 1:
             Messages.info("Registrieren", f"Benutzer '{username}' registriert!\nAGB akzeptiert.")
-            app.set_widget_option("username_entry", "text", "")
-            app.set_widget_option("password_entry", "text", "")
-            app.set_widget_option("terms_check", "value", 0)
+            try:
+                app.set_widget_option("username_entry", "text", "")
+                app.set_widget_option("password_entry", "text", "")
+                app.set_widget_option("terms_check", "value", 0)
+            except Exception as e:
+                Messages.warning("Warnung", f"Fehler beim Zurücksetzen der Felder:\n{e}")
         else:
             Messages.warning("Registrieren", "Bitte akzeptieren Sie die AGB.")
     else:
@@ -33,14 +45,22 @@ def register_user(app):
 
 
 def login_user(app):
-    Messages.info("Login", "Login erfolgreich (Dummy).")
+    try:
+        Messages.info("Login", "Login erfolgreich (Dummy).")
+    except Exception as e:
+        Messages.error("Fehler", f"Fehler beim Login:\n{e}")
 
 # --- Treeview Functions ---
 # ... (populate_treeview, clear_treeview_cmd, show_tree_selection - unverändert) ...
 def populate_treeview(app):
     """Füllt die Treeview-Tabelle mit Beispieldaten."""
     print("Fülle Treeview...")
-    app.clear_treeview("data_table") # Clear existing data first
+    try:
+        app.clear_treeview("data_table")
+    except Exception as e:
+        Messages.error("Fehler", f"Fehler beim Leeren der Tabelle:\n{e}")
+        return
+
     data = [
         (101, "Apfel", random.randint(1, 100)),
         (102, "Banane", random.randint(1, 100)),
@@ -48,53 +68,71 @@ def populate_treeview(app):
         (201, "Orange", random.randint(1, 100)),
         (202, "Zitrone", random.randint(1, 100)),
     ]
-    for item_values in data:
-        # Insert item with tuple/list of values matching the columns order in YAML
-        app.insert_treeview_item("data_table", values=item_values)
-    Messages.info("Treeview", "Tabelle wurde gefüllt.")
+    try:
+        for item_values in data:
+            app.insert_treeview_item("data_table", values=item_values)
+        Messages.info("Treeview", "Tabelle wurde gefüllt.")
+    except Exception as e:
+        Messages.error("Fehler", f"Fehler beim Füllen der Tabelle:\n{e}")
 
 def clear_treeview_cmd(app):
     """Leert die Treeview-Tabelle."""
     print("Leere Treeview...")
-    app.clear_treeview("data_table")
-    Messages.info("Treeview", "Tabelle wurde geleert.")
+    try:
+        app.clear_treeview("data_table")
+        Messages.info("Treeview", "Tabelle wurde geleert.")
+    except Exception as e:
+        Messages.error("Fehler", f"Fehler beim Leeren der Tabelle:\n{e}")
 
 def show_tree_selection(app):
     """Zeigt die aktuell ausgewählten Elemente im Treeview an."""
     print("Zeige Treeview Auswahl...")
-    selected_ids = app.get_widget_value("data_table") # Returns a tuple of item IDs
-    if selected_ids:
-        details = []
-        for item_id in selected_ids:
+    try:
+        selected_ids = app.get_widget_value("data_table")
+    except Exception as e:
+        Messages.error("Fehler", f"Fehler beim Auslesen der Auswahl:\n{e}")
+        return
+
+    if not selected_ids:
+        Messages.info("Treeview Auswahl", "Kein Element ausgewählt.")
+        return
+
+    details = []
+    for item_id in selected_ids:
+        try:
             item_data = app.get_treeview_item("data_table", item_id)
             if item_data:
-                # item_data is a dict like {'text': '', 'image': '', 'values': [101, 'Apfel', 50], 'open': 0, 'tags': ''}
                 details.append(f"ID: {item_id}, Werte: {item_data.get('values', 'N/A')}")
             else:
                 details.append(f"ID: {item_id} (Daten nicht gefunden)")
-        Messages.info("Treeview Auswahl", "\n".join(details))
-    else:
-        Messages.info("Treeview Auswahl", "Kein Element ausgewählt.")
+        except Exception as e:
+            details.append(f"ID: {item_id} (Fehler: {e})")
+    Messages.info("Treeview Auswahl", "\n".join(details))
 
 def show_all_values(app):
     """Zeigt Werte von verschiedenen Widgets an."""
     print("Zeige Werte...")
     values = []
-    # Get values using the names defined in the YAML layout
-    values.append(f"Username: {app.get_widget_value('username_entry')}")
+    try:
+        username = app.get_widget_value('username_entry')
+        terms = app.get_widget_value('terms_check')
+        color = app.get_widget_value('color_combo')
+        rating = app.get_widget_value('rating_scale')
+        count = app.get_widget_value('count_spin')
+        radio_value = app.get_widget_value('radio_group')
+        bg_color = app.get_widget_value('background_color_picker')
+    except Exception as e:
+        Messages.error("Fehler", f"Fehler beim Auslesen der Werte:\n{e}")
+        return
+
+    values.append(f"Username: {username if username is not None else '(nicht gefunden)'}")
     values.append(f"Password: ****")
-    values.append(f"AGB Akzeptiert: {'Ja' if app.get_widget_value('terms_check') == 1 else 'Nein'}")
-    values.append(f"Lieblingsfarbe: {app.get_widget_value('color_combo')}")
-    values.append(f"Bewertung: {app.get_widget_value('rating_scale')}")
-    values.append(f"Anzahl: {app.get_widget_value('count_spin')}")
-
-    # --- Abfrage des Radiobutton-Gruppenwerts ---
-    # Stelle sicher, dass 'radio_group' der Name ist, den du in YAML unter 'group:' verwendest
-    radio_value = app.get_widget_value('radio_group')
-    values.append(f"Option (Wert): {radio_value}") # Zeigt den 'value' des ausgewählten Buttons an
-
-    # --- NEW: Get ColorPicker value ---
-    values.append(f"Hintergrundfarbe: {app.get_widget_value('background_color_picker')}")
+    values.append(f"AGB Akzeptiert: {'Ja' if terms == 1 else 'Nein'}")
+    values.append(f"Lieblingsfarbe: {color if color is not None else '(nicht gefunden)'}")
+    values.append(f"Bewertung: {rating if rating is not None else '(nicht gefunden)'}")
+    values.append(f"Anzahl: {count if count is not None else '(nicht gefunden)'}")
+    values.append(f"Option (Wert): {radio_value if radio_value is not None else '(nicht gefunden)'}")
+    values.append(f"Hintergrundfarbe: {bg_color if bg_color is not None else '(nicht gefunden)'}")
 
     Messages.info("Aktuelle Werte (Auswahl)", "\n".join(values))
 
@@ -102,11 +140,11 @@ def change_label(app):
     """Ändert den Text eines Labels dynamisch."""
     print("Ändere Label...")
     new_text = f"Geändert um {random.randint(1,100)}"
-    app.set_widget_option("info_label", "text", new_text)
+    try:
+        app.set_widget_option("info_label", "text", new_text)
+    except Exception as e:
+        Messages.error("Fehler", f"Label konnte nicht geändert werden:\n{e}")
 
-def exit_app(app):
-    print("Beende die Anwendung...")
-    root.quit()
 
 # --- NEW Callback for ColorPicker (optional, if command used in YAML) ---
 def background_color_changed(selected_color):
@@ -218,5 +256,54 @@ def save_canvas_image(app):
     except Exception as e:
         Messages.error("Speicherfehler", f"Ein unerwarteter Fehler ist aufgetreten:\n{e}")
         print(f"Unexpected error during canvas save: {e}")
+
+def save_text_to_file(app):
+    """Speichert den Inhalt des Textbereichs in einer Datei."""
+    text_widget = app.get_widget("text_view_area")
+    if text_widget:
+        try:
+            file_path = FileDialogs.save_file_as(
+                defaultextension=".txt",
+                filetypes=[("Textdateien", "*.txt"), ("Alle Dateien", "*.*")]
+            )
+            if file_path:
+                with open(file_path, "w", encoding="utf-8") as file:
+                    content = text_widget.get("1.0", tk.END).strip()
+                    file.write(content)
+                Messages.info("Erfolg", f"Text erfolgreich gespeichert:\n{file_path}")
+            else:
+                print("Speichern abgebrochen.")
+        except Exception as e:
+            Messages.error("Fehler", f"Fehler beim Speichern der Datei:\n{e}")
+    else:
+        Messages.error("Fehler", "Textbereich nicht gefunden.")
+
+def load_text_from_file(app):
+    """Lädt den Inhalt einer Datei in den Textbereich."""
+    text_widget = app.get_widget("text_view_area")
+    if text_widget:
+        try:
+            file_path = FileDialogs.open_file(filetypes=[("Textdateien", "*.txt"), ("Alle Dateien", "*.*")])
+            if file_path:
+                with open(file_path, "r", encoding="utf-8") as file:
+                    content = file.read()
+                    text_widget.delete("1.0", tk.END)
+                    text_widget.insert("1.0", content)
+                Messages.info("Erfolg", f"Text erfolgreich geladen:\n{file_path}")
+            else:
+                print("Laden abgebrochen.")
+        except Exception as e:
+            Messages.error("Fehler", f"Fehler beim Laden der Datei:\n{e}")
+    else:
+        Messages.error("Fehler", "Textbereich nicht gefunden.")
+
+def clear_text_area(app):
+    """Leert den Textbereich."""
+    text_widget = app.get_widget("text_view_area")
+    if text_widget:
+        text_widget.delete("1.0", tk.END)
+        Messages.info("Erfolg", "Textbereich geleert.")
+    else:
+        Messages.error("Fehler", "Textbereich nicht gefunden.")
 
 

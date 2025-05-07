@@ -2,10 +2,8 @@
 import tkinter as tk
 from tkinter import ttk
 from simplegui.theme_manager import ThemeManager
-# Import custom widgets including the new ColorPicker widget
-from simplegui.custom_widgets import Card, InfoBox, Picture, ColorPicker # Added ColorPicker
+from simplegui.custom_widgets import Card, InfoBox, Picture, ColorPicker, HtmlPreviewArea # Added ColorPicker
 import logging
-
 
 logging.basicConfig(level=logging.INFO)
 
@@ -29,7 +27,7 @@ class SimpleGUI:
         self.widget_vars = {} # Stores associated tk.Variable objects, keyed by name/group_name
 
     def build(self, layout):
-        self._current_layout = layout  # <--- Diese Zeile ergänzen
+        self._current_layout = layout  # Store the current layout for later reference
         """
         Builds the GUI layout based on the provided dictionary structure.
 
@@ -43,10 +41,10 @@ class SimpleGUI:
 
         # Check for grid or rows layout
         if "grid" in layout:
-            print("Grid layout erkannt. Baue Grid...")
+            print("Grid layout detected. Building grid...")
             self._build_grid(container, layout["grid"])
         elif "rows" in layout:
-            print("Rows layout erkannt. Baue Rows...")
+            print("Rows layout detected. Building rows...")
             self._build_recursive(container, layout["rows"])
 
 
@@ -407,7 +405,8 @@ class SimpleGUI:
         frame_widgets = {}
         for widget_data in grid_layout:
             if widget_data.get("type") == "Frame" and "name" in widget_data:
-                options = widget_data.get("options", {}).copy()
+                # Sicherstellen, dass options immer ein Dictionary ist, bevor .copy() aufgerufen wird
+                options = (widget_data.get("options") or {}).copy()
                 grid_options = widget_data.get("grid_options", {"padx": 5, "pady": 5})
                 widget = tk.Frame(parent_container, **options)
                 widget.grid(row=widget_data.get("row", 0), column=widget_data.get("column", 0), **grid_options)
@@ -431,7 +430,8 @@ class SimpleGUI:
             column = widget_data.get("column", 0)
             widget_type = widget_data.get("type")
             widget_name = widget_data.get("name")
-            options = widget_data.get("options", {}).copy()
+            # Sicherstellen, dass options immer ein Dictionary ist, bevor .copy() aufgerufen wird
+            options = (widget_data.get("options") or {}).copy()
             grid_options = widget_data.get("grid_options", {"padx": 5, "pady": 5})
 
             widget_class = self._resolve_widget_class(widget_type)
@@ -472,20 +472,18 @@ class SimpleGUI:
             "ttk.Entry": ttk.Entry,
             "ttk.Scale": ttk.Scale,
             "ttk.Spinbox": ttk.Spinbox,
-            #"Combobox": ttk.Combobox, # Often used ttk version
             "Combobox": ttk.Combobox, # Explicit ttk version
-            #"Separator": ttk.Separator, # Often used ttk version
             "Separator": ttk.Separator, # Explicit ttk version
-            #"Notebook": ttk.Notebook, # Often used ttk version
             "Notebook": ttk.Notebook, # Explicit ttk version
-            #"Treeview": ttk.Treeview, # Often used ttk version
             "Treeview": ttk.Treeview, # Explicit ttk version
-            # Custom
+            # Custom Wirdgets
             "Card": Card,
             "InfoBox": InfoBox,
             "Picture": Picture,
-            "ColorPicker": ColorPicker # Added ColorPicker
+            "ColorPicker": ColorPicker, # Added ColorPicker,
+            "HtmlPreviewArea": HtmlPreviewArea # Added HtmlPreviewArea
         }
+
         resolved_class = mapping.get(widget_type)
         if resolved_class is None:
             # Try adding 'ttk.' prefix if not found (common convention)
@@ -495,6 +493,40 @@ class SimpleGUI:
                 logging.error(f"Unknown widget type: '{widget_type}'")
                 return None
         return resolved_class
+
+    @classmethod
+    def get_widget_class_mapping(cls):
+        """Return the widget type to class mapping used by _resolve_widget_class."""
+        # Copy the mapping from _resolve_widget_class
+        return {
+            "Label": tk.Label,
+            "Entry": tk.Entry,
+            "Button": tk.Button,
+            "Checkbutton": tk.Checkbutton,
+            "Radiobutton": tk.Radiobutton,
+            "Text": tk.Text,
+            "Frame": tk.Frame,
+            "LabelFrame": tk.LabelFrame,
+            "Scale": tk.Scale,
+            "Spinbox": tk.Spinbox,
+            "Listbox": tk.Listbox,
+            "Canvas": tk.Canvas,
+            "ttk.Button": ttk.Button,
+            "ttk.Checkbutton": ttk.Checkbutton,
+            "ttk.Radiobutton": ttk.Radiobutton,
+            "ttk.Entry": ttk.Entry,
+            "ttk.Scale": ttk.Scale,
+            "ttk.Spinbox": ttk.Spinbox,
+            "Combobox": ttk.Combobox,
+            "Separator": ttk.Separator,
+            "Notebook": ttk.Notebook,
+            "Treeview": ttk.Treeview,
+            "Card": Card,
+            "InfoBox": InfoBox,
+            "Picture": Picture,
+            "ColorPicker": ColorPicker,
+            "HtmlPreviewArea": HtmlPreviewArea,
+        }
 
     def get_widget(self, name):
         """

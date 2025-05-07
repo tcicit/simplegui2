@@ -3,6 +3,14 @@ import tkinter as tk
 from tkinter import colorchooser # Import color chooser
 from simplegui.theme_manager import ThemeManager
 import logging
+# Importiere tkhtmlview wieder
+try:
+    from tkhtmlview import HTMLLabel
+except ImportError:
+    HTMLLabel = None # Setze auf None, wenn nicht installiert
+    logging.error("tkhtmlview nicht gefunden. Bitte installieren: pip install tkhtmlview")
+
+# PIL für Picture Widget
 try:
     from PIL import Image, ImageTk
     PIL_AVAILABLE = True
@@ -229,3 +237,21 @@ class ColorPicker(tk.Frame):
                 logging.warning(f"Invalid color string for ColorPicker: {color_hex} - {e}")
         else:
              logging.warning(f"Attempted to set invalid color format in ColorPicker: {color_hex}")
+
+
+# Verwende wieder HTMLLabel als Basisklasse
+class HtmlPreviewArea(HTMLLabel if HTMLLabel else tk.Frame): # Erbe von tk.Frame als Fallback
+    def __init__(self, parent, **kwargs):
+        if not HTMLLabel: # Wenn tkhtmlview nicht geladen werden konnte
+            super().__init__(parent, **kwargs)
+            tk.Label(self, text="Fehler: tkhtmlview nicht installiert!", fg="red").pack()
+            return
+        # Initialisiere die HTMLLabel-Basisklasse
+        super().__init__(parent, **kwargs)
+        # self.pack(fill="both", expand=True) # Entfernt: Geometrie wird vom übergeordneten Layout-Manager (grid/pack) gesteuert
+
+    def set_html(self, html_content):
+        """Setzt den HTML-Inhalt für die Vorschau."""
+        # Rufe die Methode von tkhtmlview.HTMLLabel auf
+        if HTMLLabel: # Nur aufrufen, wenn die Basisklasse korrekt ist
+            super().set_html(html_content) # Rufe die Methode der Superklasse auf

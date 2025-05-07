@@ -1,0 +1,143 @@
+
+grid:
+  # Erste Spalte (Container für Editor)
+  - row: 0
+    column: 0
+    type: Frame # Geändert von Listbox zu Frame
+    name: editor_container # Neuer Name
+    options:
+      borderwidth: 1 # Optional: Rahmen zur Sichtbarkeit
+      relief: "sunken" # Optional: Rahmenstil
+    grid_options:
+      rowspan: 9 # Erstreckt sich über alle Zeilen der rechten Spalte (Anpassen bei Bedarf)
+      sticky: nsew # Lässt den ScrollableFrame den Platz ausfüllen
+
+  - row: 0
+    column: 1
+    type: Text
+    name: editor_area
+    options:
+      width: 50
+      height: 30
+      wrap: "word"
+    grid_options:
+      sticky: nsew
+      padx: 5
+      pady: 5
+
+  # ----------------- Zweite Spalte, erste Zeile (z.B. für HTML) ----------------
+  - row: 1
+    column: 0
+    type: Frame 
+    name: html_container # Neuer Name
+    options:
+      borderwidth: 1 # Optional: Rahmen zur Sichtbarkeit
+      relief: "sunken" # Optional: Rahmenstil
+    grid_options:
+      rowspan: 3 # Erstreckt sich über alle Zeilen der rechten Spalte (Anpassen bei Bedarf)
+      sticky: nsew # Lässt den ScrollableFrame den Platz ausfüllen
+  - row: 1
+    column: 1
+    type: HtmlPreviewArea
+    name: HtmlPreviewArea
+    options:
+      borderwidth: 1 # Optional: Rahmen zur Sichtbarkeit
+      relief: "sunken" # Optional: Rahmenstil
+    grid_options:
+      sticky: nsew
+      padx: 5
+ 
+
+  #---------------Dritte Spalte: Frame für alle Buttons und Labels -------------------
+  - row: 0
+    column: 2
+    type: Frame
+    name: button_panel
+    options:
+      borderwidth: 1 # Optional: Rahmen zur Sichtbarkeit
+      relief: "sunken" # Optional: Rahmenstil 
+    grid_options:
+      sticky: n
+      padx: 5
+  - row: 1
+    column: 2
+    type: Button
+    name: preview_button
+    options:
+      text: "Vorschau"
+      command: preview_html
+    grid_options:
+      sticky: nsew
+      padx: 5
+      pady: 5
+  - row: 2
+    column: 2
+    type: Button
+    name: save_button
+    options:
+      text: "Speichern"
+      command: save_html
+    grid_options:
+      sticky: nsew
+      padx: 5
+      pady: 5
+  - row: 3
+    column: 2
+    type: Button
+    name: clear_button
+    options:
+      text: "Zurücksetzen"
+      command: clear_html
+    grid_options:
+      sticky: nsew
+      padx: 5
+      pady: 5
+  - row: 4
+    column: 2
+    type: Button
+    name: exit_button
+    options:
+      text: "Beenden"
+      command: exit_app
+    grid_options:
+      sticky: nsew
+      padx: 5
+      pady: 5
+  
+menu:
+  - label: Datei
+    items:
+      - label: Neu
+        command: new_file
+      - label: Öffnen
+        command: open_file
+      - label: Speichern
+        command: save_file
+      - label: Speichern unter ...
+        command: save_file_as
+      - label: Beenden
+        command: exit_app
+  - label: Bearbeiten
+    items:
+      - label: Rückgängig
+        command: undo
+      - label: Wiederholen
+        command: redo
+      - label: Ausschneiden
+        command: cut
+      - label: Kopieren
+        command: copy
+      - label: Einfügen
+        command: paste
+      - label: Löschen
+        command: delete
+  - label: Alle auswählen
+    items:
+      - label: Alle auswählen
+        command: select_all
+  - label: Hilfe
+    items:
+      - label: Über
+        command: about
+      - label: Hilfe
+        command: help  

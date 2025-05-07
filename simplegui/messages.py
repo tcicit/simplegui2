@@ -1,83 +1,49 @@
-
 from tkinter import messagebox
 
 class Messages:
+    """
+    Utility class for showing various message and dialog boxes using tkinter.messagebox.
+    All methods are static and can be called without instantiating the class.
+    """
+
     @staticmethod
     def info(title, message):
+        """Show an informational message box."""
         messagebox.showinfo(title, message)
 
     @staticmethod
     def warning(title, message):
+        """Show a warning message box."""
         messagebox.showwarning(title, message)
 
     @staticmethod
     def error(title, message):
+        """Show an error message box."""
         messagebox.showerror(title, message)
     
     @staticmethod
     def question(title, message):
+        """Show a question dialog (returns 'yes' or 'no' as string)."""
         return messagebox.askquestion(title, message)
     
     @staticmethod
     def yesno(title, message):
+        """Show a Yes/No dialog (returns True for Yes, False for No)."""
         return messagebox.askyesno(title, message)
     
     @staticmethod
     def okcancel(title, message):
+        """Show an OK/Cancel dialog (returns True for OK, False for Cancel)."""
         return messagebox.askokcancel(title, message)
     
     @staticmethod
     def retrycancel(title, message):
+        """Show a Retry/Cancel dialog (returns True for Retry, False for Cancel)."""
         return messagebox.askretrycancel(title, message)
     
     @staticmethod
     def yesnocancel(title, message):
+        """Show a Yes/No/Cancel dialog (returns True, False, or None)."""
         return messagebox.askyesnocancel(title, message)
-    @staticmethod
-    def askstring(title, message):
-        return messagebox.askstring(title, message)
-    @staticmethod
-    def askinteger(title, message):
-        return messagebox.askinteger(title, message)
-    @staticmethod
-    def askfloat(title, message):
-        return messagebox.askfloat(title, message)
-    @staticmethod
-    def askcolor(title, message):
-        return messagebox.askcolor(title, message)
-    @staticmethod
-    def askdirectory(title, message):
-        return messagebox.askdirectory(title, message)
-    @staticmethod
-    def askopenfilename(title, message):
-        return messagebox.askopenfilename(title, message)
-    @staticmethod
-    def asksaveasfilename(title, message):
-        return messagebox.asksaveasfilename(title, message)
-    @staticmethod
-    def askopenfilenames(title, message):
-        return messagebox.askopenfilenames(title, message)
-    @staticmethod
-    def askopenfile(title, message):
-        return messagebox.askopenfile(title, message)
-    @staticmethod
-    def askopenfiles(title, message):
-        return messagebox.askopenfiles(title, message)
-    @staticmethod
-    def askopenfiletypes(title, message):
-        return messagebox.askopenfiletypes(title, message)
-    @staticmethod
-    def askopenfilestypes(title, message):
-        return messagebox.askopenfilestypes(title, message)
-    @staticmethod
-    def askopenfiletypes(title, message):
-        return messagebox.askopenfiletypes(title, message)
-    @staticmethod
-    def askopenfilestypes(title, message):
-        return messagebox.askopenfilestypes(title, message)
-    @staticmethod
-    def askopenfiletypes(title, message):
-        return messagebox.askopenfiletypes(title, message)
-    @staticmethod
-    def askopenfilestypes(title, message):
-        return messagebox.askopenfilestypes(title, message)
+
+    

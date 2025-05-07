@@ -14,7 +14,8 @@ commands = {
 
 # --- Setup ---
 root = tk.Tk()
-app = SimpleGUI(root, title="Demo App", size="800x600")
+app = SimpleGUI(root, title="Demo App", size="900x700")
+
 
 # Layout und Menü laden und automatisch Commands mappen
 setup_layout(app, "core_demo_app_layout.yaml", commands)

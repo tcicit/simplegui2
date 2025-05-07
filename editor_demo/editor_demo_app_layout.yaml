@@ -1,0 +1,47 @@
+rows:
+  - columns:
+      - type: Text
+        name: text_editor_area
+        options:
+          width: 80
+          height: 25
+          wrap: "word"
+          bg: "#FFFFFF"
+          font: ["Arial", 12]
+        pack_options: { expand: True, fill: "both" }
+  - columns:
+      - type: Button
+        name: save_button
+        options: { text: "Speichern" }
+        command: "save_text_to_file"
+      - type: Button
+        name: load_button
+        options: { text: "Laden" }
+        command: "load_text_from_file"
+      - type: Button
+        name: clear_button
+        options: { text: "Leeren" }
+        command: "clear_text_area"
+
+menu:
+  - label: "Datei"
+    items:
+      - label: "Speichern"
+        command: save_text_to_file
+      - label: "Speichern unter"
+        command: save_text_as
+      - label: "Leeren"
+        command: clear_text_area
+      - label: "Laden"
+        command: load_text_from_file
+      - label: "Beenden"
+        command: exit_app
+  - label: "Bearbeiten"
+    items:
+      - label: "Rückgängig"
+        command: undo_last_action
+      - label: "Alles markieren"
+        command: select_all_text
+      - label: "Zeilen zählen"
+        command: count_lines
+      
